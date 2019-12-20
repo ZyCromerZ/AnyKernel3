@@ -4,21 +4,21 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=ExampleKernel by osm0sis @ xda-developers
-do.devicecheck=1
+kernel.string=Spectrum Injectror for DeadlyCute/QuantumKiller by ZyCromerZ
+do.devicecheck=0
 do.modules=0
 do.cleanup=1
 do.cleanuponabort=0
-device.name1=maguro
-device.name2=toro
-device.name3=toroplus
+device.name1=X01BD
+device.name2=X01BDA
+device.name3=
 device.name4=
 device.name5=
 supported.versions=
 '; } # end properties
 
 # shell variables
-block=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot;
+block=/dev/block/bootdevice/by-name/boot;
 is_slot_device=0;
 ramdisk_compression=auto;
 
@@ -31,6 +31,7 @@ ramdisk_compression=auto;
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 chmod -R 750 $ramdisk/*;
+chmod -R 755 $ramdisk/sbin;
 chown -R root:root $ramdisk/*;
 
 
@@ -41,23 +42,91 @@ dump_boot;
 
 # init.rc
 backup_file init.rc;
-replace_string init.rc "cpuctl cpu,timer_slack" "mount cgroup none /dev/cpuctl cpu" "mount cgroup none /dev/cpuctl cpu,timer_slack";
+remove_line init.rc "import init.spectrum.rc"
+remove_line init.rc "/import init.spectrum.rc"
 
-# init.tuna.rc
-backup_file init.tuna.rc;
-insert_line init.tuna.rc "nodiratime barrier=0" after "mount_all /fstab.tuna" "\tmount ext4 /dev/block/platform/omap/omap_hsmmc.0/by-name/userdata /data remount nosuid nodev noatime nodiratime barrier=0";
-append_file init.tuna.rc "bootscript" init.tuna;
+if [ -e $ramdisk/init.spectrum.rc ];then
+  rm -rf $ramdisk/init.spectrum.rc
+  ui_print "delete /init.spectrum.rc"
+fi
+if [ -e $ramdisk/init.spectrum.sh ];then
+  rm -rf $ramdisk/init.spectrum.sh
+  ui_print "delete /init.spectrum.sh"
+fi
+if [ -e $ramdisk/sbin/init.spectrum.rc ];then
+  rm -rf $ramdisk/sbin/init.spectrum.rc
+  ui_print "delete /sbin/init.spectrum.rc"
+fi
+if [ -e $ramdisk/sbin/init.spectrum.sh ];then
+  rm -rf $ramdisk/sbin/init.spectrum.sh
+  ui_print "delete /sbin/init.spectrum.sh"
+fi
+if [ -e $ramdisk/etc/init.spectrum.rc ];then
+  rm -rf $ramdisk/etc/init.spectrum.rc
+  ui_print "delete /etc/init.spectrum.rc"
+fi
+if [ -e $ramdisk/etc/init.spectrum.sh ];then
+  rm -rf $ramdisk/etc/init.spectrum.sh
+  ui_print "delete /etc/init.spectrum.sh"
+fi
+if [ -e $ramdisk/init.aurora.rc ];then
+  rm -rf $ramdisk/init.aurora.rc
+  ui_print "delete /init.aurora.rc"
+fi
+if [ -e $ramdisk/sbin/init.aurora.rc ];then
+  rm -rf $ramdisk/sbin/init.aurora.rc
+  ui_print "delete /sbin/init.aurora.rc"
+fi
+if [ -e $ramdisk/etc/init.aurora.rc ];then
+  rm -rf $ramdisk/etc/init.aurora.rc
+  ui_print "delete /etc/init.aurora.rc"
+fi
 
-# fstab.tuna
-backup_file fstab.tuna;
-patch_fstab fstab.tuna /system ext4 options "noatime,barrier=1" "noatime,nodiratime,barrier=0";
-patch_fstab fstab.tuna /cache ext4 options "barrier=1" "barrier=0,nomblk_io_submit";
-patch_fstab fstab.tuna /data ext4 options "data=ordered" "nomblk_io_submit,data=writeback";
-append_file fstab.tuna "usbdisk" fstab;
-
-# end ramdisk changes
 
 write_boot;
 
 ## end install
 
+
+unmount /system
+unmount /vendor
+mount /system
+mount /vendor
+
+# add spectrum support
+if [ ! -e /vendor/etc/init/hw/init.qcom.rc.backup ];then
+  cp -af /vendor/etc/init/hw/init.qcom.rc /vendor/etc/init/hw/init.qcom.rc.backup
+fi
+if [ -e /vendor/etc/init/hw/init.spectrum.rc.backup ];then
+  rm -rf /vendor/etc/init/hw/init.spectrum.rc.backup
+fi
+remove_line /vendor/etc/init/hw/init.qcom.rc "import /init.spectrum.rc"
+remove_line /vendor/etc/init/hw/init.qcom.rc "import init.spectrum.rc"
+# cprofile remover
+if [ -e /system/xbin/cprofile ];then
+  rm -rf /system/xbin/cprofile
+  ui_print "remove /system/xbin/cprofile"
+fi
+if [ -e /system/bin/cprofile ];then
+  rm -rf /system/bin/cprofile
+  ui_print "remove /system/bin/cprofile"
+fi
+if [ -e /vendor/bin/cprofile ];then
+  rm -rf /vendor/bin/cprofile
+  ui_print "remove /vendor/bin/cprofile"
+fi
+if [ -e /system/init.spectrum.rc ];then
+  rm -rf /system/init.spectrum.rc
+  ui_print "remove /system/init.spectrum.rc"
+fi
+if [ -e /system/init.spectrum.sh ];then
+  rm -rf /system/init.spectrum.sh
+  ui_print "remove /system/init.spectrum.sh"
+fi
+if [ -e /vendor/etc/init/hw/init.spectrum.rc ];then
+  rm -rf /vendor/etc/init/hw/init.spectrum.rc
+  remove_line /vendor/etc/init/hw/init.qcom.rc "import /vendor/etc/init/hw/init.spectrum.rc" 
+fi
+
+unmount /system
+unmount /vendor
