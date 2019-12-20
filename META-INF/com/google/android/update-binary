@@ -218,11 +218,13 @@ fi;
 test "$savedpath" && export LD_LIBRARY_PATH="$savedpath";
 test "$savedpre" && export LD_PRELOAD="$savedpre";
 
-unmount /vendor
-mount /vendor
-grep "import /vendor/etc/init/hw/init.spectrum.rc" /vendor/etc/init/hw/init.qcom.rc >/dev/null || sed -i '1,/.*import.*/s/.*import.*/import \/vendor\/etc\/init\/hw\/init.spectrum.rc\n&/' /vendor/etc/init/hw/init.qcom.rc
-cp -af $home/init.spectrum.rc /vendor/etc/init/hw/
-chmod -R 644 /vendor/etc/init/hw/init.spectrum.rc
+if [ -e $home/init.spectrum.rc ];then
+  unmount /vendor
+  mount /vendor
+  grep "import /vendor/etc/init/hw/init.spectrum.rc" /vendor/etc/init/hw/init.qcom.rc >/dev/null || sed -i '1,/.*import.*/s/.*import.*/import \/vendor\/etc\/init\/hw\/init.spectrum.rc\n&/' /vendor/etc/init/hw/init.qcom.rc
+  cp -af $home/init.spectrum.rc /vendor/etc/init/hw/
+  chmod -R 644 /vendor/etc/init/hw/init.spectrum.rc
+fi
 
 unmount_all;
 
