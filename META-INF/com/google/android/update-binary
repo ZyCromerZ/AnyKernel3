@@ -380,15 +380,15 @@ AddSpectrum(){
 
   # add spectrum support
   if [ -e $AKHOME/init.spectrum.rc ];then
-    if [ ! -e /vendor/etc/init/hw/init.qcom.rc.backup ];then
-      cp -af /vendor/etc/init/hw/init.qcom.rc /vendor/etc/init/hw/init.qcom.rc.backup
+    if [ ! -e /vendor/etc/init/hw/init.mt6785.rc.backup ];then
+      cp -af /vendor/etc/init/hw/init.mt6785.rc /vendor/etc/init/hw/init.mt6785.rc.backup
     fi
     if [ ! -e /vendor/etc/init/hw/init.spectrum.rc.backup ];then
       cp -af /vendor/etc/init/hw/init.spectrum.rc /vendor/etc/init/hw/init.spectrum.rc.backup
     fi
-    grep "import /init.spectrum.rc" /vendor/etc/init/hw/init.qcom.rc >/dev/null | sed -i '/import \/init.spectrum.rc/d' /vendor/etc/init/hw/init.qcom.rc
-    grep "import init.spectrum.rc" /vendor/etc/init/hw/init.qcom.rc >/dev/null | sed -i '/import init.spectrum.rc/d' /vendor/etc/init/hw/init.qcom.rc
-    grep "import /vendor/etc/init/hw/init.spectrum.rc" /vendor/etc/init/hw/init.qcom.rc >/dev/null || sed -i '1,/.*import.*/s/.*import.*/import \/vendor\/etc\/init\/hw\/init.spectrum.rc\n&/' /vendor/etc/init/hw/init.qcom.rc
+    grep "import /init.spectrum.rc" /vendor/etc/init/hw/init.mt6785.rc >/dev/null | sed -i '/import \/init.spectrum.rc/d' /vendor/etc/init/hw/init.mt6785.rc
+    grep "import init.spectrum.rc" /vendor/etc/init/hw/init.mt6785.rc >/dev/null | sed -i '/import init.spectrum.rc/d' /vendor/etc/init/hw/init.mt6785.rc
+    grep "import /vendor/etc/init/hw/init.spectrum.rc" /vendor/etc/init/hw/init.mt6785.rc >/dev/null || sed -i '1,/.*import.*/s/.*import.*/import \/vendor\/etc\/init\/hw\/init.spectrum.rc\n&/' /vendor/etc/init/hw/init.mt6785.rc
     cp -af $AKHOME/init.spectrum.rc /vendor/etc/init/hw/
     chmod -R 644 /vendor/etc/init/hw/init.spectrum.rc
     # cprofile remover
@@ -416,10 +416,10 @@ AddSpectrum(){
     if [ -e /vendor/etc/init/hw/init.spectrum.rc ];then
       rm -rf /vendor/etc/init/hw/init.spectrum.rc
     fi
-    if [ -e /vendor/etc/init/hw/init.qcom.rc.backup ];then
-      cp -af /vendor/etc/init/hw/init.qcom.rc.backup /vendor/etc/init/hw/init.qcom.rc
-      rm -rf /vendor/etc/init/hw/init.qcom.rc.backup
-      grep "import /vendor/etc/init/hw/init.spectrum.rc" /vendor/etc/init/hw/init.qcom.rc >/dev/null | sed -i '/import \/vendor\/etc\/init\/hw\/init.spectrum.rc/d' /vendor/etc/init/hw/init.qcom.rc
+    if [ -e /vendor/etc/init/hw/init.mt6785.rc.backup ];then
+      cp -af /vendor/etc/init/hw/init.mt6785.rc.backup /vendor/etc/init/hw/init.mt6785.rc
+      rm -rf /vendor/etc/init/hw/init.mt6785.rc.backup
+      grep "import /vendor/etc/init/hw/init.spectrum.rc" /vendor/etc/init/hw/init.mt6785.rc >/dev/null | sed -i '/import \/vendor\/etc\/init\/hw\/init.spectrum.rc/d' /vendor/etc/init/hw/init.mt6785.rc
     fi
   fi
   $BB mount -o ro,remount -t auto /system;
