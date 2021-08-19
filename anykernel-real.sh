@@ -41,6 +41,23 @@ dump_boot;
 
 # begin ramdisk changes
 
+# hadeh :)
+cleanup_hadeh() {
+    patch_cmdline "lyb_boost_def" " "
+    patch_cmdline "lyb_eff_def" " "
+    patch_cmdline "lyb_tsmod" " "
+    patch_cmdline "dfps.min_fps" " "
+    patch_cmdline "dfps.max_fps" " "
+}
+
+# call function 10x biar seru
+X=10
+while [ $X != 0 ];
+do
+    cleanup_hadeh
+    X=$(($X-1))
+done
+
 # end ramdisk changes
 
 write_boot;

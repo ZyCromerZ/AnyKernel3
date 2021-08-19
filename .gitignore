@@ -4,3 +4,11 @@ Image.gz-dtb
 *.rc
 anykernel.sh
 dtbo.img
+Image
+Image-dtb
+Image.gz
+dtb
+dtb.img
+dt
+dt.img
+dtbo
