@@ -501,7 +501,7 @@ ChangeRefreshRate()
     HzNumber=$(($HzNumber-1))
   done
 
-  if [ "$bootbackup" = "1" ]; then
+  if [ "$bootbackup" == "1" ]; then
     ui_print "- Backing up Boot.img ...";
     mkdir -p /sdcard/BootBackup
     $BB cp $AKHOME/tools/boot.img /sdcard/BootBackup/boot-backup-$(date "+%Y%m%d%H%M%S").img
@@ -529,7 +529,7 @@ ChangeRefreshRate()
         $dtc -q -I dtb -O dts kernel_dtb-$i -o $AKHOME/tools/kernel_dtb_$i.dts
         dts_board_id=$($BB cat $AKHOME/tools/kernel_dtb_$i.dts | $BB grep qcom,board-id | $BB sed -e 's/[\t]*qcom,board-id = <//g' | $BB sed 's/>;//g')
         dts_msm_id=$($BB cat $AKHOME/tools/kernel_dtb_$i.dts | $BB grep qcom,msm-id | $BB sed -e 's/[\t]*qcom,msm-id = <//g' | $BB sed 's/>;//g')
-        if [ "$dts_board_id" = "$board_id" ] && [ "$dts_msm_id" = "$msm_id" ]; then
+        if [ "$dts_board_id" == "$board_id" ] && [ "$dts_msm_id" == "$msm_id" ]; then
           break
         fi
         $BB rm -f $AKHOME/tools/kernel_dtb_$i.dts
@@ -542,7 +542,7 @@ ChangeRefreshRate()
     ;;
     esac
 
-    if [ "$abortrefrate" = "1" ]; then
+    if [ "$abortrefrate" == "1" ]; then
       ui_print "- Failed to Modify Refresh Rate ...";
     else
       # screen refresh rate
