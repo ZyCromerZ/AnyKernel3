@@ -494,7 +494,7 @@ ChangeRefreshRate()
   bootbackup=$(file_getprop anykernel.sh do.backup)
   $BB dd if=/dev/block/bootdevice/by-name/boot of=$AKHOME/tools/boot.img
   while [ $HzNumber != 60 ]; do
-    if [[ "$ZIPFILE" == *"${HzNumber}Hz"* ]];then
+    if [[ ! -z "$(echo $ZIPFILE | grep "${HzNumber}Hz")" ]];then
       SetRefreshRate="$HzNumber"
       break
     fi
