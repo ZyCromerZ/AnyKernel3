@@ -45,6 +45,9 @@ X=10;
 while [ $X != 0 ];
 do
     patch_cmdline "zyc.gpu_clock" " ";
+    patch_cmdline "zyc.uv_gpu" "";
+    patch_cmdline "zyc.uv_vsram" "";
+    patch_cmdline "zyc.uv_cpu" "";
     X=$(($X-1));
 done
 
@@ -78,6 +81,40 @@ if [ -z "$(cat /tmp/zyc_kernelname | grep "Neutrino-Stock" )" ];then
         no=$(($no+1));
     done
     patch_cmdline "zyc.gpu_clock" "zyc.gpu_clock=$GpuFreq";
+    # 100 = 1mV
+    no=0;
+    UvGpu=0;
+    while [ $no -lt 50 ]; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "G${no}mV" )" ];then
+            UvGpu="${no}00";
+            ui_print "GPU: Undervolt to -${no}mV";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    [ "$no" != "50" ] && patch_cmdline "zyc.uv_gpu" "zyc.uv_gpu=$UvGpu";
+    no=0;
+    UvVsram=0;
+    while [ $no -lt 50 ]; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "V${no}mV" )" ];then
+            UvVsram="${no}00";
+            ui_print "VSRAM: Undervolt to -${no}mV";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    [ "$no" != "50" ] && patch_cmdline "zyc.uv_vsram" "zyc.uv_vsram=$UvVsram";
+    no=0;
+    UvCpu=0;
+    while [ $no -lt 50 ]; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "C${no}mV" )" ];then
+            UvCpu="${no}00";
+            ui_print "CPU: Undervolt to -${no}mV";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    [ "$no" != "50" ] && patch_cmdline "zyc.uv_cpu" "zyc.uv_cpu=$UvCpu";
 fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep "Enforcing" )" ] || [ -f /system_root/system/app/SecurityCoreAdd/SecurityCoreAdd.apk ] || [ -f /system/app/SecurityCoreAdd/SecurityCoreAdd.apk ];then
