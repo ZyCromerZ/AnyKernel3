@@ -45,39 +45,77 @@ X=10;
 while [ $X != 0 ];
 do
     patch_cmdline "zyc.gpu_clock" " ";
+    patch_cmdline "zyc.uv_gpu" "";
+    patch_cmdline "zyc.uv_vsram" "";
+    patch_cmdline "zyc.uv_cpu" "";
     X=$(($X-1));
 done
 
-# 0 900Mhz
-# 1 897Mhz
-# 2 892Mhz
-# 3 888Mhz
-# 4 884Mhz
-# 5 880Mhz
-# 6 875Mhz
-# 7 871Mhz
-# 8 867Mhz
-# 9 862Mhz
-# 10 858Mhz
-# 11 854Mhz
-# 12 850Mhz
-# 13 835Mhz
-# 14 821Mhz
-# 15 806Mhz (default)
-ui_print " ";
-GpuFreq="15";
-no=0;
-for ListFreq in 900 897 892 888 884 880 875 871 867 862 858 854 850 835 821 806; do
-    if [ ! -z "$(cat /tmp/zyc_kernelname | grep "${ListFreq}Mhz" )" ];then
-        GpuFreq="$no";
-        [ "$no" != "15" ] && ui_print "GPU: set max clock to ${ListFreq}Mhz(oc)";
-        [ "$no" == "15" ] && ui_print "use standard max clock 806Mhz(stock)";
-        break;
-    fi
-    no=$(($no+1));
-done
-
-patch_cmdline "zyc.gpu_clock" "zyc.gpu_clock=$GpuFreq";
+if [ -z "$(cat /tmp/zyc_kernelname | grep "Neutrino-Stock" )" ];then
+    # 0 900Mhz
+    # 1 897Mhz
+    # 2 892Mhz
+    # 3 888Mhz
+    # 4 884Mhz
+    # 5 880Mhz
+    # 6 875Mhz
+    # 7 871Mhz
+    # 8 867Mhz
+    # 9 862Mhz
+    # 10 858Mhz
+    # 11 854Mhz
+    # 12 850Mhz
+    # 13 835Mhz
+    # 14 821Mhz
+    # 15 806Mhz (default)
+    ui_print " ";
+    GpuFreq="15";
+    no=0;
+    for ListFreq in 900 897 892 888 884 880 875 871 867 862 858 854 850 835 821 806; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "${ListFreq}Mhz" )" ];then
+            GpuFreq="$no";
+            [ "$no" != "15" ] && ui_print "GPU: set max clock to ${ListFreq}Mhz(oc)";
+            [ "$no" == "15" ] && ui_print "use standard max clock 806Mhz(stock)";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    patch_cmdline "zyc.gpu_clock" "zyc.gpu_clock=$GpuFreq";
+    # 100 = 1mV
+    no=0;
+    UvGpu=0;
+    while [ $no -lt 50 ]; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "G${no}mV" )" ];then
+            UvGpu="${no}00";
+            ui_print "GPU: Undervolt to -${no}mV";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    [ "$no" != "50" ] && patch_cmdline "zyc.uv_gpu" "zyc.uv_gpu=$UvGpu";
+    no=0;
+    UvVsram=0;
+    while [ $no -lt 50 ]; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "V${no}mV" )" ];then
+            UvVsram="${no}00";
+            ui_print "VSRAM: Undervolt to -${no}mV";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    [ "$no" != "50" ] && patch_cmdline "zyc.uv_vsram" "zyc.uv_vsram=$UvVsram";
+    no=0;
+    UvCpu=0;
+    while [ $no -lt 50 ]; do
+        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "C${no}mV" )" ];then
+            UvCpu="${no}00";
+            ui_print "CPU: Undervolt to -${no}mV";
+            break;
+        fi
+        no=$(($no+1));
+    done
+    [ "$no" != "50" ] && patch_cmdline "zyc.uv_cpu" "zyc.uv_cpu=$UvCpu";
+fi
 
 rm -rf /tmp/zyc_kernelname;
 
