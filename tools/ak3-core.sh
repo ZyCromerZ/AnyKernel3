@@ -412,6 +412,10 @@ flash_dtbo() {
   local i dtbo dtboblock;
 
   cd $home;
+  if [ -z "$(cat /tmp/zyc_kernelname | grep "FixMiui")" ]; then
+    rm -rf $home/dtb 2>/dev>null;
+    rm -rf $home/dtbo.img 2>/dev>null;
+  fi;
   for i in dtbo dtbo.img; do
     if [ -f $i ]; then
       dtbo=$i;
