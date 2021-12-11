@@ -77,9 +77,15 @@ if [ ! -z "$(cat /tmp/zyc_kernelname | grep "Neutrino" )" ];then
     patch_cmdline "zyc.gpu_clock" "zyc.gpu_clock=$GpuFreq";
 fi
 
-rm -rf /tmp/zyc_kernelname;
 # end ramdisk changes
+
+if [ -z "$(cat /tmp/zyc_kernelname | grep "FixMiui")" ]; then
+  ui_print "zipname not contain FixMiui";
+  ui_print "Removing dtb and dtbo.img files . . .";
+  rm -rf $home/dtb;
+  rm -rf $home/dtbo.img;
+fi;
+rm -rf /tmp/zyc_kernelname;
 
 write_boot;
 ## end install
-

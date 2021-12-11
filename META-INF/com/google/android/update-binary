@@ -442,12 +442,6 @@ unzip -o "$ZIPFILE";
 if [ $? != 0 -o ! "$(ls tools)" ]; then
   abort "Unzip failed. Aborting...";
 fi;
-if [ -z "$(cat /tmp/zyc_kernelname | grep "FixMiui")" ]; then
-  ui_print "zipname not contain FixMiui";
-  ui_print "Removing dtb and dtbo.img files . . .";
-  rm -rf $AKHOME/dtb 2>/dev>null;
-  rm -rf $AKHOME/dtbo.img 2>/dev>null;
-fi;
 for ARCH32 in x86 arm; do
   if [ -d $AKHOME/tools/$ARCH32 ]; then
     BB=$AKHOME/tools/$ARCH32/busybox;
