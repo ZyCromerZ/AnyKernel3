@@ -48,6 +48,8 @@ cleanup_hadeh() {
     patch_cmdline "lyb_tsmod" " "
     patch_cmdline "dfps.min_fps" " "
     patch_cmdline "dfps.max_fps" " "
+    patch_cmdline "zyc.adrenoboost" " "
+    patch_cmdline "zyc.cpulimit" " "
 }
 
 # call function 10x biar seru
@@ -58,6 +60,21 @@ do
     X=$(($X-1))
 done
 
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT0 )" ];then
+    patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=0";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT1 )" ];then
+    patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=1";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT2 )" ];then
+    patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=2";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT3 )" ];then
+    patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=3";
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep MPDCL )" ] || [ ! -z "$(cat /tmp/zyc_kernelname | grep DTC )" ];then
+    patch_cmdline "zyc.cpulimit" "zyc.cpulimit=0"
+fi
+
+rm -rf /tmp/zyc_kernelname
 # end ramdisk changes
 
 write_boot;
