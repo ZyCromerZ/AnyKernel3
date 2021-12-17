@@ -62,16 +62,25 @@ done
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT0 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=0";
+    ui_print "Set Adrenoboost default value to Disable"
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT1 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=1";
+    ui_print "Set Adrenoboost default value to Low"
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT2 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=2";
+    ui_print "Set Adrenoboost default value to Medium"
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT3 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=3";
+    ui_print "Set Adrenoboost default value to High"
 fi
 
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep MPDCL )" ] || [ ! -z "$(cat /tmp/zyc_kernelname | grep DTC )" ];then
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep MPDCL )" ];then
     patch_cmdline "zyc.cpulimit" "zyc.cpulimit=0"
+    ui_print "- Disable limit CPU min/max freq on msm_performance module";
+
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MPECL )" ];then
+    patch_cmdline "zyc.cpulimit" "zyc.cpulimit=1"
+    ui_print "- Enable limit CPU min/max freq on msm_performance module";
 fi
 
 rm -rf /tmp/zyc_kernelname
