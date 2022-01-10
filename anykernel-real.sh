@@ -93,7 +93,7 @@ elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC )" ];then
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK )" ];then
     cp -af $home/dtb-stock $home/dtb;
     ui_print "- Using STOCK dtb";
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC-OC )" ];then
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC-OC )" ];then
     cp -af $home/dtb-uv-uc-oc $home/dtb;
     ui_print "- Using UV-UC-OC dtb";
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC )" ];then
@@ -102,7 +102,7 @@ elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC )" ];then
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV )" ];then
     cp -af $home/dtb-uv $home/dtb;
     ui_print "- Using UV dtb";
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC-OC )" ];then
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC-OC )" ];then
     cp -af $home/dtb-muv-uc-oc $home/dtb;
     ui_print "- Using MUV-UC-OC dtb";
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC )" ];then
