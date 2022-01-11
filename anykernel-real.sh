@@ -83,38 +83,40 @@ elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MPECL )" ];then
     ui_print "- Enable limit CPU min/max freq on msm_performance module";
 fi
 
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC-OC )" ];then
-    cp -af $home/dtb-stock-uc-oc $home/dtb;
-    ui_print "- Using STOCK-UC-OC dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC )" ];then
-    cp -af $home/dtb-stock-uc $home/dtb;
-    ui_print "- Using STOCK-UC dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK )" ];then
-    cp -af $home/dtb-stock $home/dtb;
-    ui_print "- Using STOCK dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC-OC )" ];then
-    cp -af $home/dtb-uv-uc-oc $home/dtb;
-    ui_print "- Using UV-UC-OC dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC )" ];then
-    cp -af $home/dtb-uv-uc $home/dtb;
-    ui_print "- Using UV-UC dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV )" ];then
-    cp -af $home/dtb-uv $home/dtb;
-    ui_print "- Using UV dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC-OC )" ];then
-    cp -af $home/dtb-muv-uc-oc $home/dtb;
-    ui_print "- Using MUV-UC-OC dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC )" ];then
-    cp -af $home/dtb-muv-uc $home/dtb;
-    ui_print "- Using MUV-UC dtb";
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV )" ];then
-    cp -af $home/dtb-muv $home/dtb;
-    ui_print "- Using MUV dtb";
-else
-    cp -af $home/dtb-stock $home/dtb;
-    ui_print "- Using STOCK dtb";
+if [ ! -z "$(ls $home | grep "dtb-" )" ];then
+    if [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC-OC )" ];then
+        cp -af $home/dtb-stock-uc-oc $home/dtb;
+        ui_print "- Using STOCK-UC-OC dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC )" ];then
+        cp -af $home/dtb-stock-uc $home/dtb;
+        ui_print "- Using STOCK-UC dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK )" ];then
+        cp -af $home/dtb-stock $home/dtb;
+        ui_print "- Using STOCK dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC-OC )" ];then
+        cp -af $home/dtb-uv-uc-oc $home/dtb;
+        ui_print "- Using UV-UC-OC dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC )" ];then
+        cp -af $home/dtb-uv-uc $home/dtb;
+        ui_print "- Using UV-UC dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV )" ];then
+        cp -af $home/dtb-uv $home/dtb;
+        ui_print "- Using UV dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC-OC )" ];then
+        cp -af $home/dtb-muv-uc-oc $home/dtb;
+        ui_print "- Using MUV-UC-OC dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC )" ];then
+        cp -af $home/dtb-muv-uc $home/dtb;
+        ui_print "- Using MUV-UC dtb";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV )" ];then
+        cp -af $home/dtb-muv $home/dtb;
+        ui_print "- Using MUV dtb";
+    else
+        cp -af $home/dtb-stock $home/dtb;
+        ui_print "- Using STOCK dtb";
+    fi
+    rm -rf $home/dtb-*;
 fi
-rm -rf $home/dtb-*;
 
 rm -rf /tmp/zyc_kernelname;
 # end ramdisk changes
