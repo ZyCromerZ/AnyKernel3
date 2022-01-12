@@ -84,6 +84,33 @@ elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MPECL )" ];then
     ui_print "- Enable limit CPU min/max freq on msm_performance module";
 fi
 
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DSP )" ];then
+    patch_cmdline "zyc.sultan_pid" "zyc.sultan_pid=0"
+    ui_print "- Disable sultan_pid and sultan_pid_map by default";
+
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESP )" ];then
+    patch_cmdline "zyc.sultan_pid" "zyc.sultan_pid=1"
+    ui_print "- Enable sultan_pid and sultan_pid_map by default";
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DST )" ];then
+    patch_cmdline "zyc.sultan_tid" "zyc.sultan_tid=0"
+    ui_print "- Disable sultan_tid and sultan_tid_map by default";
+
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep EST )" ];then
+    patch_cmdline "zyc.sultan_tid" "zyc.sultan_tid=1"
+    ui_print "- Enable sultan_tid and sultan_tid_map by default";
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DSH )" ];then
+    patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=0"
+    ui_print "- Disable sultan_pid_shrink by default";
+
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESH )" ];then
+    patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=1"
+    ui_print "- Enable sultan_pid_shrink by default";
+fi
+
 if [ ! -z "$(ls $home | grep "dtb-" )" ];then
     if [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC-OC )" ];then
         cp -af $home/dtb-stock-uc-oc $home/dtb;
