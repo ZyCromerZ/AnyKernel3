@@ -51,6 +51,9 @@ cleanup_hadeh() {
     patch_cmdline "dfps.max_fps" " "
     patch_cmdline "zyc.adrenoboost" " "
     patch_cmdline "zyc.cpulimit" " "
+    patch_cmdline "zyc.sultan_pid" " "
+    patch_cmdline "zyc.sultan_tid" " "
+    patch_cmdline "zyc.sultan_shrink" " "
 }
 
 # call function 10x biar seru
