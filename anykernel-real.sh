@@ -83,49 +83,51 @@ if [ -z "$(cat /tmp/zyc_kernelname | grep "Neutrino-Stock" )" ];then
     done
     patch_cmdline "zyc.gpu_clock" "zyc.gpu_clock=$GpuFreq";
     # 100 = 1mV
-    no=0;
-    UvGpu=0;
-    while [ $no -lt 50 ]; do
-        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "G${no}mV" )" ];then
-            UvGpu="${no}00";
-            ui_print "GPU: Undervolt to -${no}mV";
-            break;
-        fi
-        no=$(($no+1));
-    done
-    [ "$no" != "50" ] && patch_cmdline "zyc.uv_gpu" "zyc.uv_gpu=$UvGpu";
-    no=0;
-    UvVsram=0;
-    while [ $no -lt 50 ]; do
-        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "V${no}mV" )" ];then
-            UvVsram="${no}00";
-            ui_print "VSRAM: Undervolt to -${no}mV";
-            break;
-        fi
-        no=$(($no+1));
-    done
-    [ "$no" != "50" ] && patch_cmdline "zyc.uv_vsram" "zyc.uv_vsram=$UvVsram";
-    no=0;
-    UvCpu=0;
-    while [ $no -lt 50 ]; do
-        if [ ! -z "$(cat /tmp/zyc_kernelname | grep "C${no}mV" )" ];then
-            UvCpu="${no}00";
-            ui_print "CPU: Undervolt to -${no}mV";
-            break;
-        fi
-        no=$(($no+1));
-    done
-    [ "$no" != "50" ] && patch_cmdline "zyc.uv_cpu" "zyc.uv_cpu=$UvCpu";
+    # no=0;
+    # UvGpu=0;
+    # while [ $no -lt 50 ]; do
+    #     if [ ! -z "$(cat /tmp/zyc_kernelname | grep "G${no}mV" )" ];then
+    #         UvGpu="${no}00";
+    #         ui_print "GPU: Undervolt to -${no}mV";
+    #         break;
+    #     fi
+    #     no=$(($no+1));
+    # done
+    # [ "$no" != "50" ] && patch_cmdline "zyc.uv_gpu" "zyc.uv_gpu=$UvGpu";
+    # no=0;
+    # UvVsram=0;
+    # while [ $no -lt 50 ]; do
+    #     if [ ! -z "$(cat /tmp/zyc_kernelname | grep "V${no}mV" )" ];then
+    #         UvVsram="${no}00";
+    #         ui_print "VSRAM: Undervolt to -${no}mV";
+    #         break;
+    #     fi
+    #     no=$(($no+1));
+    # done
+    # [ "$no" != "50" ] && patch_cmdline "zyc.uv_vsram" "zyc.uv_vsram=$UvVsram";
+    # no=0;
+    # UvCpu=0;
+    # while [ $no -lt 50 ]; do
+    #     if [ ! -z "$(cat /tmp/zyc_kernelname | grep "C${no}mV" )" ];then
+    #         UvCpu="${no}00";
+    #         ui_print "CPU: Undervolt to -${no}mV";
+    #         break;
+    #     fi
+    #     no=$(($no+1));
+    # done
+    # [ "$no" != "50" ] && patch_cmdline "zyc.uv_cpu" "zyc.uv_cpu=$UvCpu";
 fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep "Enforcing" )" ] || [ -f /system_root/system/app/SecurityCoreAdd/SecurityCoreAdd.apk ] || [ -f /system/app/SecurityCoreAdd/SecurityCoreAdd.apk ];then
     X=10;
     while [ $X != 0 ];
     do
-        patch_cmdline "androidboot.selinux" " ";
+        patch_cmdline "zyc.selinux" " ";
+        patch_cmdline "zyc.forceselinux" " ";
         X=$(($X-1));
     done
-    patch_cmdline "androidboot.selinux" "androidboot.selinux=enforcing";
+    patch_cmdline "zyc.selinux" "zyc.selinux=1";
+    patch_cmdline "zyc.forceselinux" "zyc.forceselinux=1";
 fi
 
 rm -rf /tmp/zyc_kernelname;
