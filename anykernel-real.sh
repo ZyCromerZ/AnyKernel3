@@ -125,7 +125,7 @@ fi
 # elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESH )" ];then
 #     patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=1"
 #     ui_print "- Enable sultan_pid_shrink by default";
-fi
+# fi
 
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYE )" ];then
