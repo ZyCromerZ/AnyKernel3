@@ -47,8 +47,9 @@ cleanup_hadeh() {
     patch_cmdline "lyb_boost_def" " "
     patch_cmdline "lyb_eff_def" " "
     patch_cmdline "lyb_tsmod" " "
-    # patch_cmdline "dfps.min_fps" " "
-    # patch_cmdline "dfps.max_fps" " "
+    patch_cmdline "dfps.min_fps" " "
+    patch_cmdline "dfps.max_fps" " "
+    patch_cmdline "dfps.skip_fps" " "
     patch_cmdline "zyc.adrenoboost" " "
     patch_cmdline "zyc.cpulimit" " "
     patch_cmdline "zyc.sultan_pid" " "
@@ -73,7 +74,7 @@ cleanup_n_update() {
         patch_cmdline "$Yaitu" " "
         X=$(($X-1))
     done
-    patch_cmdline "$Yaitu" "$Isinya="
+    patch_cmdline "$Yaitu" "$Yaitu=$Isinya"
 }
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT0 )" ];then
@@ -129,12 +130,12 @@ fi
 
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYE )" ];then
-    cleanup_n_update "dfps.dynamic_fps" "1"
+    cleanup_n_update "dfps.skip_fps" "1"
     ui_print "- Enable Display Dynamic Refreshrate by default";
 
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYD )" ];then
     ui_print "- Disable Display Dynamic Refreshrate by default";
-    cleanup_n_update "dfps.dynamic_fps" "0"
+    cleanup_n_update "dfps.skip_fps" "0"
 fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin120Hz )" ];then
