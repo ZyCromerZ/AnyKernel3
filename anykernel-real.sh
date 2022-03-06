@@ -47,13 +47,13 @@ cleanup_hadeh() {
     patch_cmdline "lyb_boost_def" " "
     patch_cmdline "lyb_eff_def" " "
     patch_cmdline "lyb_tsmod" " "
-    patch_cmdline "dfps.min_fps" " "
-    patch_cmdline "dfps.max_fps" " "
+    # patch_cmdline "dfps.min_fps" " "
+    # patch_cmdline "dfps.max_fps" " "
     patch_cmdline "zyc.adrenoboost" " "
     patch_cmdline "zyc.cpulimit" " "
     patch_cmdline "zyc.sultan_pid" " "
-    patch_cmdline "zyc.sultan_tid" " "
     patch_cmdline "zyc.sultan_shrink" " "
+    patch_cmdline "zyc.cib" " "
 }
 
 # call function 10x biar seru
@@ -63,6 +63,18 @@ do
     cleanup_hadeh
     X=$(($X-1))
 done
+
+cleanup_n_update() {
+    local Yaitu="$1"
+    local Isinya="$2"
+    local X=10
+    while [ $X != 0 ];
+    do
+        patch_cmdline "$Yaitu" " "
+        X=$(($X-1))
+    done
+    patch_cmdline "$Yaitu" "$Isinya="
+}
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT0 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=0";
@@ -80,66 +92,129 @@ fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep MPDCL )" ];then
     patch_cmdline "zyc.cpulimit" "zyc.cpulimit=0"
-    ui_print "- Disable limit CPU min/max freq on msm_performance module";
+    ui_print "- Disable limit CPU min/max freq on msm_performance module by default";
 
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MPECL )" ];then
     patch_cmdline "zyc.cpulimit" "zyc.cpulimit=1"
-    ui_print "- Enable limit CPU min/max freq on msm_performance module";
+    ui_print "- Enable limit CPU min/max freq on msm_performance module by default";
 fi
 
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep DSP )" ];then
-    patch_cmdline "zyc.sultan_pid" "zyc.sultan_pid=0"
-    ui_print "- Disable sultan_pid and sultan_pid_map by default";
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep CIBE )" ];then
+    patch_cmdline "zyc.cib" "zyc.cib=1"
+    ui_print "- Enable Cpu input Boost by default";
 
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESP )" ];then
-    patch_cmdline "zyc.sultan_pid" "zyc.sultan_pid=1"
-    ui_print "- Enable sultan_pid and sultan_pid_map by default";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep CIBD )" ];then
+    ui_print "- Disable Cpu input Boost by default";
+    patch_cmdline "zyc.cib" "zyc.cib=0"
 fi
 
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep DST )" ];then
-    patch_cmdline "zyc.sultan_tid" "zyc.sultan_tid=0"
-    ui_print "- Disable sultan_tid and sultan_tid_map by default";
+# if [ ! -z "$(cat /tmp/zyc_kernelname | grep DSP )" ];then
+#     patch_cmdline "zyc.sultan_pid" "zyc.sultan_pid=0"
+#     ui_print "- Disable sultan_pid and sultan_pid_map by default";
 
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep EST )" ];then
-    patch_cmdline "zyc.sultan_tid" "zyc.sultan_tid=1"
-    ui_print "- Enable sultan_tid and sultan_tid_map by default";
+# elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESP )" ];then
+#     patch_cmdline "zyc.sultan_pid" "zyc.sultan_pid=1"
+#     ui_print "- Enable sultan_pid and sultan_pid_map by default";
+# fi
+
+
+# if [ ! -z "$(cat /tmp/zyc_kernelname | grep DSH )" ];then
+#     patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=0"
+#     ui_print "- Disable sultan_pid_shrink by default";
+
+# elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESH )" ];then
+#     patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=1"
+#     ui_print "- Enable sultan_pid_shrink by default";
 fi
 
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep DSH )" ];then
-    patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=0"
-    ui_print "- Disable sultan_pid_shrink by default";
 
-elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ESH )" ];then
-    patch_cmdline "zyc.sultan_shrink" "zyc.sultan_shrink=1"
-    ui_print "- Enable sultan_pid_shrink by default";
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYE )" ];then
+    cleanup_n_update "dfps.dynamic_fps" "1"
+    ui_print "- Enable Display Dynamic Refreshrate by default";
+
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYD )" ];then
+    ui_print "- Disable Display Dynamic Refreshrate by default";
+    cleanup_n_update "dfps.dynamic_fps" "0"
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin120Hz )" ];then
+    ui_print "- Set dfps.min_fps to 120Hz"
+    cleanup_n_update "dfps.min_fps" "120"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin100Hz )" ];then
+    ui_print "- Set dfps.min_fps to 100Hz"
+    cleanup_n_update "dfps.min_fps" "100"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin90Hz )" ];then
+    ui_print "- Set dfps.min_fps to 90Hz"
+    cleanup_n_update "dfps.min_fps" "90"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin75Hz )" ];then
+    ui_print "- Set dfps.min_fps to 75Hz"
+    cleanup_n_update "dfps.min_fps" "75"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin60Hz )" ];then
+    ui_print "- Set dfps.min_fps to 60Hz"
+    cleanup_n_update "dfps.min_fps" "60"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin50Hz )" ];then
+    ui_print "- Set dfps.min_fps to 50Hz"
+    cleanup_n_update "dfps.min_fps" "50"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin48Hz )" ];then
+    ui_print "- Set dfps.min_fps to 48Hz"
+    cleanup_n_update "dfps.min_fps" "48"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin30Hz )" ];then
+    ui_print "- Set dfps.min_fps to 30Hz"
+    cleanup_n_update "dfps.min_fps" "30"
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax120Hz )" ];then
+    ui_print "- Set dfps.max_fps to 120Hz"
+    cleanup_n_update "dfps.max_fps" "120"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax100Hz )" ];then
+    ui_print "- Set dfps.max_fps to 100Hz"
+    cleanup_n_update "dfps.max_fps" "100"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax90Hz )" ];then
+    ui_print "- Set dfps.max_fps to 90Hz"
+    cleanup_n_update "dfps.max_fps" "90"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax75Hz )" ];then
+    ui_print "- Set dfps.max_fps to 75Hz"
+    cleanup_n_update "dfps.max_fps" "75"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax60Hz )" ];then
+    ui_print "- Set dfps.max_fps to 60Hz"
+    cleanup_n_update "dfps.max_fps" "60"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax50Hz )" ];then
+    ui_print "- Set dfps.max_fps to 50Hz"
+    cleanup_n_update "dfps.max_fps" "50"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax48Hz )" ];then
+    ui_print "- Set dfps.max_fps to 48Hz"
+    cleanup_n_update "dfps.max_fps" "48"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax30Hz )" ];then
+    ui_print "- Set dfps.max_fps to 30Hz"
+    cleanup_n_update "dfps.max_fps" "30"
 fi
 
 if [ ! -z "$(ls $home | grep "dtb-" )" ];then
-    if [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC-OC )" ];then
+    if [ -f $home/dtb-stock-uc-oc ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC-OC )" ];then
         cp -af $home/dtb-stock-uc-oc $home/dtb;
         ui_print "- Using STOCK-UC-OC dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC )" ];then
+    elif [ -f $home/dtb-stock-uc ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK-UC )" ];then
         cp -af $home/dtb-stock-uc $home/dtb;
         ui_print "- Using STOCK-UC dtb";
     elif [ ! -z "$(cat /tmp/zyc_kernelname | grep STOCK )" ];then
         cp -af $home/dtb-stock $home/dtb;
         ui_print "- Using STOCK dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC-OC )" ];then
+    elif [ -f $home/dtb-muv-uc-oc ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC-OC )" ];then
         cp -af $home/dtb-muv-uc-oc $home/dtb;
         ui_print "- Using MUV-UC-OC dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC )" ];then
+    elif [ -f $home/dtb-muv-uc ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV-UC )" ];then
         cp -af $home/dtb-muv-uc $home/dtb;
         ui_print "- Using MUV-UC dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV )" ];then
+    elif [ -f $home/dtb-muv ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep MUV )" ];then
         cp -af $home/dtb-muv $home/dtb;
         ui_print "- Using MUV dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC-OC )" ];then
+    elif [ -f $home/dtb-uv-uc-oc ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC-OC )" ];then
         cp -af $home/dtb-uv-uc-oc $home/dtb;
         ui_print "- Using UV-UC-OC dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC )" ];then
+    elif [ -f $home/dtb-uv-uc ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep UV-UC )" ];then
         cp -af $home/dtb-uv-uc $home/dtb;
         ui_print "- Using UV-UC dtb";
-    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep UV )" ];then
+    elif [ -f $home/dtb-uv ] && [ ! -z "$(cat /tmp/zyc_kernelname | grep UV )" ];then
         cp -af $home/dtb-uv $home/dtb;
         ui_print "- Using UV dtb";
     else
