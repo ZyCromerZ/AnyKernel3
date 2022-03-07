@@ -47,9 +47,10 @@ cleanup_hadeh() {
     patch_cmdline "lyb_boost_def" " "
     patch_cmdline "lyb_eff_def" " "
     patch_cmdline "lyb_tsmod" " "
-    patch_cmdline "dfps.min_fps" " "
-    patch_cmdline "dfps.max_fps" " "
-    patch_cmdline "dfps.skip_fps" " "
+    # patch_cmdline "dfps.min_fps" " "
+    # patch_cmdline "dfps.max_fps" " "
+    # patch_cmdline "dfps.dynamic_fps" " "
+    # patch_cmdline "dfps.skip_fps" " "
     patch_cmdline "zyc.adrenoboost" " "
     patch_cmdline "zyc.cpulimit" " "
     patch_cmdline "zyc.sultan_pid" " "
@@ -74,7 +75,9 @@ cleanup_n_update() {
         patch_cmdline "$Yaitu" " "
         X=$(($X-1))
     done
-    patch_cmdline "$Yaitu" "$Yaitu=$Isinya"
+    if [ "$Isinya" != "null" ];then
+        patch_cmdline "$Yaitu" "$Yaitu=$Isinya"
+    fi
 }
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT0 )" ];then
@@ -128,14 +131,27 @@ fi
 #     ui_print "- Enable sultan_pid_shrink by default";
 # fi
 
-
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYE )" ];then
-    cleanup_n_update "dfps.skip_fps" "1"
+    cleanup_n_update "dfps.dynamic_fps" "1"
     ui_print "- Enable Display Dynamic Refreshrate by default";
 
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFDYD )" ];then
     ui_print "- Disable Display Dynamic Refreshrate by default";
-    cleanup_n_update "dfps.skip_fps" "0"
+    cleanup_n_update "dfps.dynamic_fps" "0"
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFSF1 )" ];then
+    cleanup_n_update "dfps.skip_fps" "1"
+    ui_print "- set dfps.skip_fps to 1";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFSF2 )" ];then
+    cleanup_n_update "dfps.skip_fps" "2"
+    ui_print "- set dfps.skip_fps to 2";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFSF3 )" ];then
+    cleanup_n_update "dfps.skip_fps" "3"
+    ui_print "- set dfps.skip_fps to 3";
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFSFC )" ];then
+    ui_print "- clear dfps.skip_fps value";
+    cleanup_n_update "dfps.skip_fps" "null"
 fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMin120Hz )" ];then
