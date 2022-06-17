@@ -56,6 +56,7 @@ cleanup_hadeh() {
     patch_cmdline "zyc.sultan_pid" " "
     patch_cmdline "zyc.sultan_shrink" " "
     patch_cmdline "zyc.cib" " "
+    patch_cmdline "zyc.thermal_lock" " "
 }
 
 # call function 10x biar seru
@@ -204,6 +205,14 @@ elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax48Hz )" ];then
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep DFMax30Hz )" ];then
     ui_print "- Set dfps.max_fps to 30Hz"
     cleanup_n_update "dfps.max_fps" "30"
+fi
+
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep FST16 )" ];then
+    cleanup_n_update "zyc.thermal_lock" "16"
+    ui_print "- Set zyc.thermal_lock to 16"
+elif [ ! -z "$(cat /tmp/zyc_kernelname | grep FST10 )" ];then
+    cleanup_n_update "zyc.thermal_lock" "10"
+    ui_print "- Set zyc.thermal_lock to 10"
 fi
 
 if [ ! -z "$(ls $home | grep "dtb-" )" ];then
