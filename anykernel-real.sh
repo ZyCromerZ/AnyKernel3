@@ -83,16 +83,16 @@ cleanup_n_update() {
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT0 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=0";
-    ui_print "Set Adrenoboost default value to Disable"
+    ui_print "- Set Adrenoboost default value to Disable"
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT1 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=1";
-    ui_print "Set Adrenoboost default value to Low"
+    ui_print "- Set Adrenoboost default value to Low"
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT2 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=2";
-    ui_print "Set Adrenoboost default value to Medium"
+    ui_print "- Set Adrenoboost default value to Medium"
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep ADT3 )" ];then
     patch_cmdline "zyc.adrenoboost" "zyc.adrenoboost=3";
-    ui_print "Set Adrenoboost default value to High"
+    ui_print "- Set Adrenoboost default value to High"
 fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep MPDCL )" ];then
@@ -213,6 +213,25 @@ if [ ! -z "$(cat /tmp/zyc_kernelname | grep FST16 )" ];then
 elif [ ! -z "$(cat /tmp/zyc_kernelname | grep FST10 )" ];then
     cleanup_n_update "zyc.thermal_lock" "10"
     ui_print "- Set zyc.thermal_lock to 10"
+fi
+
+if [[ ! -z "$(cat /tmp/zyc_kernelname | grep ODTBO )" ]];then
+    cleanup_n_update "zyc.old_mdsi" "1"
+    ui_print "- Set zyc.old_mdsi to 1"
+elif [[ ! -z "$(cat /tmp/zyc_kernelname | grep NDTBO )" ]];then
+    cleanup_n_update "zyc.old_mdsi" "0"
+    ui_print "- Set zyc.old_mdsi to 0"
+else
+    if [[ -e /system/build.prop ]];then
+        android_ver=$(file_getprop /system/build.prop ro.build.version.sdk);
+        if [[ "$android_ver" -ge "31" ]];then
+            cleanup_n_update "zyc.old_mdsi" "0"
+            ui_print "- Set zyc.old_mdsi to 0"
+        else
+            cleanup_n_update "zyc.old_mdsi" "1"
+            ui_print "- Set zyc.old_mdsi to 1"
+        fi
+    fi
 fi
 
 if [ ! -z "$(ls $home | grep "dtb-" )" ];then
