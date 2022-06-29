@@ -49,6 +49,7 @@ do
     patch_cmdline "zyc.uv_gpu" "";
     patch_cmdline "zyc.uv_vsram" "";
     patch_cmdline "zyc.uv_cpu" "";
+    patch_cmdline "androidboot.forceenforcing" "";
     X=$(($X-1));
 done
 
@@ -119,15 +120,7 @@ if [ -z "$(cat /tmp/zyc_kernelname | grep "Neutrino-Stock" )" ];then
 fi
 
 if [ ! -z "$(cat /tmp/zyc_kernelname | grep "Enforcing" )" ] || [ -f /system_root/system/app/SecurityCoreAdd/SecurityCoreAdd.apk ] || [ -f /system/app/SecurityCoreAdd/SecurityCoreAdd.apk ];then
-    X=10;
-    while [ $X != 0 ];
-    do
-        patch_cmdline "zyc.selinux" " ";
-        patch_cmdline "zyc.forceselinux" " ";
-        X=$(($X-1));
-    done
-    patch_cmdline "zyc.selinux" "zyc.selinux=1";
-    patch_cmdline "zyc.forceselinux" "zyc.forceselinux=1";
+    patch_cmdline "androidboot.forceenforcing" "androidboot.forceenforcing=y";
 fi
 
 rm -rf /tmp/zyc_kernelname;
