@@ -134,8 +134,16 @@ if [ -z "$(cat /tmp/zyc_kernelname | grep "Neutrino-Stock" )" ];then
     # [ "$no" != "50" ] && patch_cmdline "zyc.uv_cpu" "zyc.uv_cpu=$UvCpu";
 fi
 
-if [ ! -z "$(cat /tmp/zyc_kernelname | grep "Enforcing" )" ] || [ -f /system_root/system/app/SecurityCoreAdd/SecurityCoreAdd.apk ] || [ -f /system/app/SecurityCoreAdd/SecurityCoreAdd.apk ];then
-    patch_cmdline "androidboot.forceenforcing" "androidboot.forceenforcing=y";
+if [ ! -z "$(cat /tmp/zyc_kernelname | grep "DTBO" )" ];then
+    if [ -f /system_root/system/app/SecurityCoreAdd/SecurityCoreAdd.apk ] || [ -f /system/app/SecurityCoreAdd/SecurityCoreAdd.apk ];then
+        patch_cmdline "androidboot.forceenforcing" "androidboot.forceenforcing=y";
+        ui_print "Memekui detected,Force Enfoncing . . .";
+    elif [ ! -z "$(cat /tmp/zyc_kernelname | grep "Enforcing" )" ];then
+        patch_cmdline "androidboot.forceenforcing" "androidboot.forceenforcing=y";
+        ui_print "Force Enfoncing . . .";
+    fi
+else
+    rm -rf $home/dtb $home/dtbo.img
 fi
 
 rm -rf /tmp/zyc_kernelname;
